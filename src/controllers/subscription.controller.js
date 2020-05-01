@@ -7,20 +7,20 @@ module.exports.csvUploadSubscription = async (req, res) => {
   try {
     const event = req.body;
 
-    console.log(`Sub event received`, event);
+    console.log(`Sub event received`, JSON.stringify(event));
 
     // New upload/file replacement
-    if (event.attributes.eventType === 'OBJECT_FINALIZE') {
+    if (event.message.attributes.eventType === 'OBJECT_FINALIZE') {
 
       // Download to csv/temp/objectId
-      await storageService.getFile(event.attributes.bucketId, event.attributes.objectId);
+      await storageService.getFile(event.message.attributes.bucketId, event.message.attributes.objectId);
 
       // Parse CSV to [Object];
-      const parsedCsv = await csvParserService.parseCsvToObjects(`csv/temp/${event.attributes.objectId}`);
+      const parsedCsv = await csvParserService.parseCsvToObjects(`csv/temp/${event.message.attributes.objectId}`);
 
       // Build schema based on CSV
       const schema = Object.keys(parsedCsv[0]).map(key => ({name: key, type: 'STRING'}));
-      const tableId = event.attributes.objectId.split('.')[0];
+      const tableId = event.message.attributes.objectId.split('.')[0];
 
       // Making sure the table is there
       const isTableCreated = await bigQueryService.isTableCreated(tableId);
@@ -42,7 +42,7 @@ module.exports.csvUploadSubscription = async (req, res) => {
     // Even if this flow fails for some reason,
     // I'm still sending the "message acknowledged" back to Pub/Sub.
     // Proper error handling should be done in a real scenario.
-    console.error(err);
+    console.error(JSON.stringify(err));
     res.sendStatus(200); // Message acknowledged
   }
 }
