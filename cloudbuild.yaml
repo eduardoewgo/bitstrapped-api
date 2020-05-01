@@ -10,6 +10,5 @@ steps:
     args: ['run', 'deploy', 'bitstrapped', '--image', 'gcr.io/bitstrapped-275900/bitstrapped:${SHORT_SHA}', '--platform', 'managed','--region', 'us-central1', '--allow-unauthenticated']
     env:
       - 'PORT=8080'
-      - 'NODE_ENV=production'
 images:
   - gcr.io/bitstrapped-275900/bitstrapped
