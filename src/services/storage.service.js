@@ -11,3 +11,12 @@ module.exports.getFile = async (bucketId, objectId) => {
       .catch(reject);
   })
 };
+
+module.exports.uploadFile = async (bucketId, {path, originalname}) => {
+  return new Promise(async (resolve, reject) => {
+    const bucket = storage.bucket(bucketId);
+    bucket.upload(path, {destination: originalname})
+      .then(resolve)
+      .catch(reject);
+  })
+}
