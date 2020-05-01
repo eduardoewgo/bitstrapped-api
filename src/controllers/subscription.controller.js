@@ -5,22 +5,22 @@ const csvParserService = require('../services/csv-parser.service');
 
 module.exports.csvUploadSubscription = async (req, res) => {
   try {
-    const {bucketId, objectId, eventType} = req.body;
+    const event = req.body;
 
     console.log(`Sub event received`, req.body);
 
     // New upload/file replacement
-    if (eventType === 'OBJECT_FINALIZE') {
+    if (event.message.attributes.eventType === 'OBJECT_FINALIZE') {
 
       // Download to csv/temp/objectId
-      await storageService.getFile(bucketId, objectId);
+      await storageService.getFile(event.message.attributes.bucketId, event.message.attributes.objectId);
 
       // Parse CSV to [Object];
-      const parsedCsv = await csvParserService.parseCsvToObjects(`csv/temp/${objectId}`);
+      const parsedCsv = await csvParserService.parseCsvToObjects(`csv/temp/${event.message.attributes.objectId}`);
 
       // Build schema based on CSV
       const schema = Object.keys(parsedCsv[0]).map(key => ({name: key, type: 'STRING'}));
-      const tableId = objectId.split('.')[0];
+      const tableId = event.message.attributes.objectId.split('.')[0];
 
       // Making sure the table is there
       const isTableCreated = await bigQueryService.isTableCreated(tableId);
