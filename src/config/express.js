@@ -20,6 +20,7 @@ module.exports = () => {
     res.send(`Yep, I am live at ${process.env.PORT || 3000}!`);
   });
   require('../routes/upload.routes')(app);
+  require('../routes/subscription.routes')(app);
 
   return app;
 }
