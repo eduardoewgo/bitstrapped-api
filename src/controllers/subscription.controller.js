@@ -7,6 +7,8 @@ module.exports.csvUploadSubscription = async (req, res) => {
   try {
     const {bucketId, objectId, eventType} = req.body;
 
+    console.log(`Sub event received`, req.body);
+
     // New upload/file replacement
     if (eventType === 'OBJECT_FINALIZE') {
 
