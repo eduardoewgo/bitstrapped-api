@@ -1,6 +1,6 @@
 ## Objective (as per requirements)
 Once a file is uploaded on GStorage, the Pub/Sub should be responsible
-to active a nodejs endpoint to process the new file and save 
+to activate a nodejs endpoint to process the new file and save 
 its contents to BigQuery.
 
 Cloud Build is triggered on commits in the master branch, 
@@ -29,4 +29,4 @@ building the docker image and running it with Cloud Run.
     - BigQuery
 
 ## Considerations
-I believe a few things could be done differently, however I assumed the purpose of this was to test different areas inside inside GCP, so I believe it would be fine for that.
+I believe a few things could be done differently, however I assumed the purpose of this was to test different areas inside inside GCP.
